@@ -1,0 +1,159 @@
+
+const axios = require('axios');
+const { parse } = require('node-html-parser');
+
+function timeAgo(timestamp) {
+    const now = new Date();
+    const timeDifference = Math.floor((now.getTime() / 1000) - timestamp); // in seconds
+
+    const minutes = Math.floor(timeDifference / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+        return `${days} day${days > 1 ? 's' : ''} ago`;
+    } else if (hours > 0) {
+        return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else if (minutes > 0) {
+        return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    } else {
+        return `Just now`;
+    }
+}
+exports.crudeOil = async (req, res, next) => {
+    try {
+        const data = await fetchOilData(45);
+        res.send(data);
+    } catch (error) {
+        console.error("Error fetching oil data:", error);
+        res.status(500).send({ error: "Failed to fetch oil data" });
+    }
+};
+
+async function fetchOilData(id) {
+    const axios = require('axios');
+    let data = `blend_id=${id}&period=4`;
+
+    let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://oilprice.com/freewidgets/json_get_oilprices',
+        headers: { 
+            'accept': 'application/json, text/javascript, */*; q=0.01', 
+            'accept-language': 'en-US,en;q=0.9', 
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8', 
+            'cookie': '_wingify_pc_uuid=406724212ccc4fb6b5b239095d6439fc; ga_store_user_id=17239627667281673971841; wingify_donot_track_actions=0; _gid=GA1.2.356636906.1723962768; wingify_push_do_not_show_notification_popup=true; productionop_csrf_cookie=8d47467c9860fd4b166e327a4b591cde; oilprice_ci=s53n7b5toruq1b4248f5s3cibca3phbg; page_view_count=6; _gat_UA-2249023-24=1; _ga_HE81JNZL3S=GS1.1.1724063028.4.1.1724063043.0.0.0; _ga=GA1.1.1677770949.1723962768; AWSALB=0HIruW6QKgX5Qx5TMsZFmB6T7w7WPuPbB4jQeZhEm6jsDgwl1nXlu0MREPfYVEpuFj9aFfO46GMYXlL08SR/uk9VTupLbcr1otihu/S3z2V4OVVTJ0/4azq6QV6M; AWSALBCORS=0HIruW6QKgX5Qx5TMsZFmB6T7w7WPuPbB4jQeZhEm6jsDgwl1nXlu0MREPfYVEpuFj9aFfO46GMYXlL08SR/uk9VTupLbcr1otihu/S3z2V4OVVTJ0/4azq6QV6M; AWSALB=UNYfb/y+2uEC5grT4fK1CnkS2EJ00vJa17ScU1pzutRaxJKNnVOpw+tB8YnPubdcJspfdilmJUt9kh3UPciJF6hbyw3izhnfp7Q9RloK8GPYiCRuyAtxfN/O9UIw; AWSALBCORS=UNYfb/y+2uEC5grT4fK1CnkS2EJ00vJa17ScU1pzutRaxJKNnVOpw+tB8YnPubdcJspfdilmJUt9kh3UPciJF6hbyw3izhnfp7Q9RloK8GPYiCRuyAtxfN/O9UIw; oilprice_ci=s53n7b5toruq1b4248f5s3cibca3phbg', 
+            'dnt': '1', 
+            'origin': 'https://oilprice.com', 
+            'priority': 'u=1, i', 
+            'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Opera GX";v="112"', 
+            'sec-ch-ua-mobile': '?0', 
+            'sec-ch-ua-platform': '"Windows"', 
+            'sec-fetch-dest': 'empty', 
+            'sec-fetch-mode': 'cors', 
+            'sec-fetch-site': 'same-origin', 
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 OPR/112.0.0.0', 
+            'x-requested-with': 'XMLHttpRequest'
+        },
+        data: data
+    };
+
+    try {
+        const response = await axios.request(config);
+        const data = response.data;
+        let returnobj = {
+            logo: `https://d1o9e4un86hhpc.cloudfront.net/a/img/oilprices/${data.blend.flag}`,
+            change: data.change.toFixed(2),
+            last_price: data.last_price,
+            last_time: timeAgo(data.blend.last_price_timestamp),
+            change_percent: data.change_percent,
+            symbol:data.blend.blend_name
+        };
+        return returnobj;
+    } catch (error) {
+        console.error("Error in fetchOilData:", error);
+        throw error;
+    }
+}
+
+
+exports.rates =async(req,res,next)=>{
+
+        let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: 'https://bluedollar.net/',
+        headers: { 
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 
+            'accept-language': 'en-US,en;q=0.9', 
+            'cache-control': 'max-age=0', 
+            'cookie': '_ga=GA1.1.929259686.1723962739; __gads=ID=4ab0e030a2bd95b4:T=1723962735:RT=1724088319:S=ALNI_MYh5XYeQlkaGTgVA5xX7L6j6L9Zcw; __eoi=ID=5e24072ff952478e:T=1723962735:RT=1724088319:S=AA-Afjb4H7MuSd5PDDPdYXblmu56; _ga_ELHRHW0F2V=GS1.1.1724088325.6.0.1724088327.58.0.0; FCNEC=%5B%5B%22AKsRol_4MxMMDAAcVJWivCKaTK8C6T6jCe5P6hLPw9AXlzOafLrmzlUnKQiwD-S_4t6S2QjyDvE--CT_n7QuOL4V8PHeybGX5TztdxKeJlpQJGW_9UuPGmNPimhYRZYVbc8I7Ecus1bHw0JYAUYedXBdtePTRvYOHA%3D%3D%22%5D%5D', 
+            'dnt': '1', 
+            'priority': 'u=0, i', 
+            'referer': 'https://replit.com/', 
+            'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Opera GX";v="112"', 
+            'sec-ch-ua-mobile': '?0', 
+            'sec-ch-ua-platform': '"Windows"', 
+            'sec-fetch-dest': 'document', 
+            'sec-fetch-mode': 'navigate', 
+            'sec-fetch-site': 'cross-site', 
+            'sec-fetch-user': '?1', 
+            'upgrade-insecure-requests': '1', 
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 OPR/112.0.0.0'
+        }
+        };
+
+        axios.request(config)
+        .then((response) => {
+            const root = parse(response.data);
+            // Find the "Informal Rate" section
+            const informalRateSection = root.querySelector('.informal');
+            // console.log(informalRateSection.innerText)
+
+          
+            // Extract the Buy and Sell values
+            const informalbuyValue = informalRateSection.querySelector('.buy').textContent.trim().replace('\nBuy', '');
+            const informalsellValue = informalRateSection.querySelector('.sell').textContent.trim().replace('\nSell', '');
+
+            const officialRateSection = root.querySelector('.official');
+            // console.log(informalRateSection.innerText)
+
+           
+            // Extract the Buy and Sell values
+            const officialbuyValue = officialRateSection.querySelector('.buy').textContent.trim().replace('\nBuy', '');
+            const officialsellValue = officialRateSection.querySelector('.sell').textContent.trim().replace('\nSell', '');
+
+            const result = {
+
+            informalbuyValue: informalbuyValue,
+            informalsellValue: informalsellValue,
+            officialbuyValue: officialbuyValue,
+            officialsellValue: officialsellValue
+            
+            };
+
+           res.send(result);
+        })
+
+        //   console.log(JSON.stringify(response.data));
+        .catch((error) => {
+            console.log(error);
+            res.status(500).send(error);
+        });
+
+}
+
+
+exports.crudeOil = async (req, res, next) => {
+    try {
+        const data =[]
+        data.push( await fetchOilData(45));
+        data.push( await fetchOilData(46));
+        data.push( await fetchOilData(29));
+
+        res.send(data);
+    } catch (error) {
+        console.error("Error fetching oil data:", error);
+        res.status(500).send({ error: "Failed to fetch oil data" });
+    }
+};
