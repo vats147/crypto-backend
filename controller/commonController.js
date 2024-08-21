@@ -221,7 +221,7 @@ exports.argentinaBond = async (req, res, next) => {
 
       let resData = {
         title :title,
-        price: price,
+        value: price,
         priceChange: priceChange,
         percentageChange: percentageChange,
       };
@@ -282,7 +282,7 @@ exports.dlBonds = async (req, res, next) => {
 
       let resData = {
         title :title,
-        price: price,
+        value: price,
         priceChange: priceChange,
         percentageChange: percentageChange,
       };
