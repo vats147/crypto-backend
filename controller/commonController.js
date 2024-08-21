@@ -171,8 +171,7 @@ exports.crudeOil = async (req, res, next) => {
 
 // Argentinien, RepublikDL-Bonds 2020(24-30)
 exports.argentinaBond = async (req, res, next) => {
-  
-    let config = {
+  let config = {
     method: "get",
     maxBodyLength: Infinity,
     url: "https://markets.businessinsider.com/bonds/argentinien-_republikdl-bonds_202024-30-bond-2030-ararge3209s6?miRedirects=1",
@@ -206,17 +205,87 @@ exports.argentinaBond = async (req, res, next) => {
     .then((response) => {
       const root = parse(response.data);
 
-      const price = root.querySelector(".price-section__current-value").innerText;
-      const priceChange = root.querySelector(".price-section__absolute-value").innerText;
+      const price = root.querySelector(
+        ".price-section__current-value"
+      ).innerText;
+      const priceChange = root.querySelector(
+        ".price-section__absolute-value"
+      ).innerText;
       const percentageChange = root.querySelector(
         ".price-section__relative-value"
       ).innerText;
+      const title = root.querySelector(
+        ".price-section__label"
+      ).innerText;
+
 
       let resData = {
-        price : price,
-        priceChange : priceChange,
-        percentageChange : percentageChange
-      }
+        title :title,
+        price: price,
+        priceChange: priceChange,
+        percentageChange: percentageChange,
+      };
+      res.send(resData);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.send(error);
+    });
+};
+exports.dlBonds = async (req, res, next) => {
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: "https://markets.businessinsider.com/bonds/dl-bonds_202020-28-41-bond-2041-ararge3209v0?miRedirects=1",
+    headers: {
+      Accept:
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "Accept-Language": "en-US,en;q=0.9",
+      "Cache-Control": "max-age=0",
+      Connection: "keep-alive",
+      Cookie:
+        "_gcl_au=1.1.492669746.1724252943; _ga=GA1.1.1058214780.1724252953; MiWebpushNotification=1; universal_id=f5954ae9-5efd-45cf-b89f-1ce6f75df5b8; anonymous_id=8137fad5-ac03-4028-908d-9f1db196f5a6; fenrir_anonymous_id=8137fad5-ac03-4028-908d-9f1db196f5a6; _pcid=%7B%22browserId%22%3A%22m03zox7yqxyzsbvv%22%7D; __pat=-14400000; _pctx=%7Bu%7DN4IgrgzgpgThIC4B2YA2qA05owMoBcBDfSREQpAeyRCwgEt8oBJAE0RXQF8g; xbc=%7Bkpcd%7DChBtMDN6b3g3eXF4eXpzYnZ2EgpCNnNJWEtMaWluGjxxTEF0bXlHdTRhME81MlVBSnBoWFNNbXFhQTU4OWdWOGlOUUJEd01PdXJUM2dSRVY2cktIUktZbEJ3Q3ggAA; __pvi=eyJpZCI6InYtMjAyNC0wOC0yMS0yMC0zOS0xOC0wMTEtMjVBWlp6cXhJRXFOaG5UdS1iYWM3MmU5MGFkMGJmNzRlMjY4OTQ3MmM3NWJjNjY2NyIsImRvbWFpbiI6Ii5idXNpbmVzc2luc2lkZXIuY29tIiwidGltZSI6MTcyNDI1MzA1NjA0NX0%3D; _ga_QMNT7JQZ6N=GS1.1.1724252958.1.1.1724253056.0.0.0; __tbc=%7Bkpcd%7DChBtMDN6b3g3eXF4eXpzYnZ2EgpCNnNJWEtMaWluGjxxTEF0bXlHdTRhME81MlVBSnBoWFNNbXFhQTU4OWdWOGlOUUJEd01PdXJUM2dSRVY2cktIUktZbEJ3Q3ggAA; _ga_E21CV80ZCZ=GS1.1.1724255091.2.0.1724255104.47.0.0",
+      DNT: "1",
+      "If-Modified-Since": "Wed, 21 Aug 2024 15:04:04 GMT",
+      "If-None-Match": 'W/"22e6e-jIfItTLl+a89+ZURNulgSRV0s1Q"',
+      "Sec-Fetch-Dest": "document",
+      "Sec-Fetch-Mode": "navigate",
+      "Sec-Fetch-Site": "none",
+      "Sec-Fetch-User": "?1",
+      "Upgrade-Insecure-Requests": "1",
+      "User-Agent":
+        "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36",
+      "sec-ch-ua":
+        '"Not/A)Brand";v="8", "Chromium";v="126", "Opera GX";v="112"',
+      "sec-ch-ua-mobile": "?1",
+      "sec-ch-ua-platform": '"Android"',
+    },
+  };
+  axios
+    .request(config)
+    .then((response) => {
+      const root = parse(response.data);
+
+      const price = root.querySelector(
+        ".price-section__current-value"
+      ).innerText;
+      const priceChange = root.querySelector(
+        ".price-section__absolute-value"
+      ).innerText;
+      const percentageChange = root.querySelector(
+        ".price-section__relative-value"
+      ).innerText;
+      const title = root.querySelector(
+        ".price-section__label"
+      ).innerText;
+
+
+      let resData = {
+        title :title,
+        price: price,
+        priceChange: priceChange,
+        percentageChange: percentageChange,
+      };
       res.send(resData);
     })
     .catch((error) => {
