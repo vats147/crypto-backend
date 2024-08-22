@@ -82,6 +82,8 @@ exports.rates = async (req, res, next) => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
+    timeout: 10000,
+    family: 4,
     url: "https://bluedollar.net/",
     headers: {
       accept:
@@ -156,7 +158,7 @@ exports.rates = async (req, res, next) => {
 
       const result = {
         
-        informalbuyValue,
+        informalbuyValue, 
         informalsellValue,
         officialbuyValue,
         officialsellValue,
