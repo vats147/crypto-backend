@@ -13,6 +13,8 @@
     "axios": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "node-html-parser": "^6.1.13"
+    "node-cron": "^3.0.3",
+    "node-html-parser": "^6.1.13",
+    "nodemailer": "^6.9.14"
   }
 }
