@@ -125,6 +125,15 @@ exports.rates = async (req, res, next) => {
         .textContent.trim()
         .replace("\nSell", "");
 
+        const informalBuyPercentage = informalRateSection.querySelector(".percent");
+      
+      let textContent = informalBuyPercentage.textContent.trim();
+      
+      const [informalBuyChangePercentage, informalSellChangeValue] = textContent.split(/\s+/);
+      
+
+      
+
       const officialRateSection = root.querySelector(".official");
       // console.log(informalRateSection.innerText)
 
@@ -138,11 +147,24 @@ exports.rates = async (req, res, next) => {
         .textContent.trim()
         .replace("\nSell", "");
 
+        const officalBuyPercentage = officialRateSection.querySelector(".percent");
+      
+       textContent = officalBuyPercentage.textContent.trim();
+      
+      const [officalBuyChangePercentage, officalSellChangeValue] = textContent.split(/\s+/);
+      
+
       const result = {
-        informalbuyValue: informalbuyValue,
-        informalsellValue: informalsellValue,
-        officialbuyValue: officialbuyValue,
-        officialsellValue: officialsellValue,
+        
+        informalbuyValue,
+        informalsellValue,
+        officialbuyValue,
+        officialsellValue,
+        informalBuyChangePercentage,
+        informalSellChangeValue,
+        officalBuyChangePercentage,
+        officalSellChangeValue,
+
       };
 
       res.send(result);
