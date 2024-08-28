@@ -127,14 +127,13 @@ exports.rates = async (req, res, next) => {
         .textContent.trim()
         .replace("\nSell", "");
 
-        const informalBuyPercentage = informalRateSection.querySelector(".percent");
-      
-      let textContent = informalBuyPercentage.textContent.trim();
-      
-      const [informalBuyChangePercentage, informalSellChangeValue] = textContent.split(/\s+/);
-      
+      const informalBuyPercentage =
+        informalRateSection.querySelector(".percent");
 
-      
+      let textContent = informalBuyPercentage.textContent.trim();
+
+      const [informalBuyChangePercentage, informalSellChangeValue] =
+        textContent.split(/\s+/);
 
       const officialRateSection = root.querySelector(".official");
       // console.log(informalRateSection.innerText)
@@ -149,16 +148,16 @@ exports.rates = async (req, res, next) => {
         .textContent.trim()
         .replace("\nSell", "");
 
-        const officalBuyPercentage = officialRateSection.querySelector(".percent");
-      
-       textContent = officalBuyPercentage.textContent.trim();
-      
-      const [officalBuyChangePercentage, officalSellChangeValue] = textContent.split(/\s+/);
-      
+      const officalBuyPercentage =
+        officialRateSection.querySelector(".percent");
+
+      textContent = officalBuyPercentage.textContent.trim();
+
+      const [officalBuyChangePercentage, officalSellChangeValue] =
+        textContent.split(/\s+/);
 
       const result = {
-        
-        informalbuyValue, 
+        informalbuyValue,
         informalsellValue,
         officialbuyValue,
         officialsellValue,
@@ -166,7 +165,6 @@ exports.rates = async (req, res, next) => {
         informalSellChangeValue,
         officalBuyChangePercentage,
         officalSellChangeValue,
-
       };
 
       res.send(result);
@@ -238,13 +236,10 @@ exports.argentinaBond = async (req, res, next) => {
       const percentageChange = root.querySelector(
         ".price-section__relative-value"
       ).innerText;
-      const title = root.querySelector(
-        ".price-section__label"
-      ).innerText;
-
+      const title = root.querySelector(".price-section__label").innerText;
 
       let resData = {
-        title :title,
+        title: title,
         value: price,
         priceChange: priceChange,
         percentageChange: percentageChange,
@@ -299,13 +294,10 @@ exports.dlBonds = async (req, res, next) => {
       const percentageChange = root.querySelector(
         ".price-section__relative-value"
       ).innerText;
-      const title = root.querySelector(
-        ".price-section__label"
-      ).innerText;
-
+      const title = root.querySelector(".price-section__label").innerText;
 
       let resData = {
-        title :title,
+        title: title,
         value: price,
         priceChange: priceChange,
         percentageChange: percentageChange,
@@ -316,4 +308,52 @@ exports.dlBonds = async (req, res, next) => {
       console.log(error);
       res.send(error);
     });
+};
+
+exports.vix = async (req, res, next) => {
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=.VIX&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json&events=1",
+    headers: {
+      accept: "*/*",
+      "accept-language": "en-US,en;q=0.9",
+      dnt: "1",
+      origin: "https://www.cnbc.com",
+      priority: "u=1, i",
+      referer: "https://www.cnbc.com/quotes/.VIX",
+      "sec-ch-ua":
+        '"Not/A)Brand";v="8", "Chromium";v="126", "Opera GX";v="112"',
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": '"Windows"',
+      "sec-fetch-dest": "empty",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-site": "same-site",
+      "user-agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 OPR/112.0.0.0",
+    },
+  };
+
+  let data = axios
+    .request(config)
+    .then((response) => {
+      console.log(
+        JSON.stringify(
+          response.data.FormattedQuoteResult.FormattedQuote[0].symbol
+        )
+      );
+
+      return response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  data.then((e) => {
+    res.send({
+      symbol: e.FormattedQuoteResult.FormattedQuote[0].symbol,
+      priceChange: e.FormattedQuoteResult.FormattedQuote[0].change,
+      percentageChange: e.FormattedQuoteResult.FormattedQuote[0].change_pct,
+      value: e.FormattedQuoteResult.FormattedQuote[0].last,
+    });
+  });
 };
