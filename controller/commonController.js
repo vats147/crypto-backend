@@ -351,9 +351,9 @@ exports.vix = async (req, res, next) => {
   data.then((e) => {
     res.send({
       symbol: e.FormattedQuoteResult.FormattedQuote[0].symbol,
-      price: e.FormattedQuoteResult.FormattedQuote[0].change.split('%')[0],
+      currentValue: e.FormattedQuoteResult.FormattedQuote[0].change.split('%')[0],
       percentageChange: e.FormattedQuoteResult.FormattedQuote[0].change_pct.split('%')[0],
-      currentValue: e.FormattedQuoteResult.FormattedQuote[0].last,
+      price: e.FormattedQuoteResult.FormattedQuote[0].last,
       isPositive: e.FormattedQuoteResult.FormattedQuote[0].change_pct > 0 ? true : false,
       sourceLink :"https://www.cnbc.com/quotes/.VIX"
     });
