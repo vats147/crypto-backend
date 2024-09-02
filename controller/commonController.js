@@ -350,7 +350,7 @@ exports.vix = async (req, res, next) => {
     });
   data.then((e) => {
     res.send({
-      symbol: e.FormattedQuoteResult.FormattedQuote[0].symbol,
+      symbol: e.FormattedQuoteResult.FormattedQuote[0].symbol.split('.')[1],
       currentValue: (e.FormattedQuoteResult.FormattedQuote[0].change.split('%')[0]).split('$')[1],
       percentageChange: e.FormattedQuoteResult.FormattedQuote[0].change_pct.split('%')[0],
       price: e.FormattedQuoteResult.FormattedQuote[0].last,
